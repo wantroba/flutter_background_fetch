@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+- [iOS] Fix podspec public_header_files glob to match actual header location
+  The public_header_files glob was pointing to Sources/include/ but the
+  header lives under Sources/background_fetch/include/, so the glob matched
+  zero files. This broke module resolution when building with CocoaPods and
+  use_frameworks! from Xcode.
+
 ## 1.5.0 &mdash; 2025-11-09
 * Both the plugin's iOS and Android core libs (`TSBackgroundFetch.xcframework`, `tsbackgroundfetch.aar`) are now published to Cocoapods, Swift Package Manager and Sonatype for android.  This is especially wonderful for android, as now there's no more need of the custom `maven url` in the root `build.gradle`.
 * See the Setup Guides for both iOS and Android (they have changed from previous versions).
