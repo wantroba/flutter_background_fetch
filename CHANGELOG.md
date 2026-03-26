@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## Unreleased
+- Add CLAUDE.md with SDK architecture, build commands, and conventions
 - [iOS] Fix podspec public_header_files glob to match actual header location
   The public_header_files glob was pointing to Sources/include/ but the
   header lives under Sources/background_fetch/include/, so the glob matched
