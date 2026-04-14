@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.0 &mdash; 2026-04-14
+* [Changed] Renamed `HeadlessTask` class to `HeadlessEvent` to align with TypeScript API.  A `typedef HeadlessTask = HeadlessEvent` alias is provided for backwards compatibility.
+* [Changed] Simplified README with links to new [Documentation Site](https://fetch.transistorsoft.com/flutter).
+
 ## 1.5.1 &mdash; 2026-03-26
 - Add CLAUDE.md with SDK architecture, build commands, and conventions
 - [iOS] Fix podspec public_header_files glob to match actual header location

@@ -28,17 +28,21 @@ enum NetworkType {
   CELLULAR
 }
 
+/// Backwards-compatible alias for [HeadlessEvent].
+@Deprecated('Use HeadlessEvent instead.')
+typedef HeadlessTask = HeadlessEvent;
+
 /// Event object provided to registered headlessTask.
-class HeadlessTask {
+class HeadlessEvent {
   /// The task identifier
   String taskId;
 
   /// Signals whether this headless-task has timeout out.
   bool timeout;
 
-  /// Create a new HeadlessTask instance.
+  /// Create a new HeadlessEvent instance.
   /// Automatically instantitated and provided to your registered headless task.
-  HeadlessTask(this.taskId, this.timeout);
+  HeadlessEvent(this.taskId, this.timeout);
 }
 
 /// Base class for both [BackgroundFetchConfig] and [TaskConfig].
@@ -69,7 +73,7 @@ class _AbstractTaskConfig {
   /// // This "Headless Task" is run when app is terminated.
   /// // Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
   /// @pragma('vm:entry-point')
-  /// void backgroundFetchHeadlessTask(HeadlessTask task) async {
+  /// void backgroundFetchHeadlessTask(HeadlessEvent task) async {
   ///   String taskId = task.taskId;
   ///   bool isTimeout = task.timeout;
   ///   if (isTimeout) {
@@ -598,7 +602,7 @@ class BackgroundFetch {
   ///
   /// // This "Headless Task" is run when app is terminated.
   /// // Headless task should be a top-level or static function
-  /// void backgroundFetchHeadlessTask(HeadlessTask task) async {
+  /// void backgroundFetchHeadlessTask(HeadlessEvent task) async {
   ///   String taskId = task.taskId;
   ///   bool isTimeout = task.timeout;
   ///   if (isTimeout) {
@@ -672,7 +676,7 @@ void _headlessCallbackDispatcher() {
             '[BackgroundFetch _headlessCallbackDispatcher] ERROR: Failed to get callback from handle: $args');
         return;
       }
-      var task = HeadlessTask(args['task']['taskId'], args['task']['timeout']);
+      var task = HeadlessEvent(args['task']['taskId'], args['task']['timeout']);
       callback(task);
     } catch (e, stacktrace) {
       print(

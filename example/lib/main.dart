@@ -12,11 +12,11 @@ const EVENTS_KEY = "fetch_events";
 
 /// This "Headless Task" is run when app is terminated.
 @pragma('vm:entry-point')
-void backgroundFetchHeadlessTask(HeadlessTask task) async {
-  var taskId = task.taskId;
-  var timeout = task.timeout;
+void backgroundFetchHeadlessTask(HeadlessEvent event) async {
+  var taskId = event.taskId;
+  var timeout = event.timeout;
   if (timeout) {
-    print("[BackgroundFetch] Headless task timed-out: $taskId");
+    print("[BackgroundFetch] Headless event timed-out: $taskId");
     BackgroundFetch.finish(taskId);
     return;
   }
