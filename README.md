@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/transistorsoft/assets/master/images/logos/transistor/transistor-logo-panel-flutter.svg" alt="Background Fetch for Flutter" width="635">
+  <img src="https://raw.githubusercontent.com/transistorsoft/assets/master/images/logos/transistor/transistor-logo-panel-dart.svg" alt="Background Fetch for Flutter" width="635">
 </p>
 
 background_fetch &middot; [![pub package](https://img.shields.io/pub/v/background_fetch.svg)](https://pub.dev/packages/background_fetch)
