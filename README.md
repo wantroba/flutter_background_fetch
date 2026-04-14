@@ -35,24 +35,6 @@ There is **no way** to increase the rate which a fetch-event occurs and this plu
 - :beetle: [Debugging](https://fetch.transistorsoft.com/flutter/debugging)
 - :open_file_folder: [Example App](./example)
 
-## Installing the plugin
-
-:file_folder: **`pubspec.yaml`**:
-
-```yaml
-dependencies:
-  background_fetch: '^1.3.0'
-```
-
-### Or latest from Git:
-
-```yaml
-dependencies:
-  background_fetch:
-    git:
-      url: https://github.com/transistorsoft/flutter_background_fetch
-```
-
 ## Licence
 
 The MIT License
