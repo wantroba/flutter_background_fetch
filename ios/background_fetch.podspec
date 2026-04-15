@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.source_files = 'background_fetch/Sources/background_fetch/**/*.{h,m}'
   s.public_header_files = 'background_fetch/Sources/background_fetch/include/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'TSBackgroundFetch', '~> 4.0'
+  s.dependency 'TSBackgroundFetch', '~> 4.1.0'
   s.ios.deployment_target = '12.0'
 end
 
