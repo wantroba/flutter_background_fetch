@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.6.1 &mdash; 2026-04-15
+* Update native libs for 4.1.0
+
 ## 1.6.0 &mdash; 2026-04-14
 * [Changed] Renamed `HeadlessTask` class to `HeadlessEvent` to align with TypeScript API.  A `typedef HeadlessTask = HeadlessEvent` alias is provided for backwards compatibility.
 * [Changed] Simplified README with links to new [Documentation Site](https://fetch.transistorsoft.com/flutter).
