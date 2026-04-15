@@ -38,6 +38,6 @@ android {
 }
 
 dependencies {
-  def backgroundFetchVersion = safeExtGet('backgroundFetchVersion', '4.0.+')
+  def backgroundFetchVersion = safeExtGet('backgroundFetchVersion', '4.1.+')
   implementation "com.transistorsoft:tsbackgroundfetch:$backgroundFetchVersion"
 }

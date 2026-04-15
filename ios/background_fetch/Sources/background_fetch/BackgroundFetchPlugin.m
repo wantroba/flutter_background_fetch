@@ -33,6 +33,9 @@ static NSString *const ACTION_SCHEDULE_TASK = @"scheduleTask";
     return YES;
 }
 
+// didFinishLaunching is handled automatically by TSBackgroundFetch +load
+// (v4.1+). Keep this call for backward compatibility with older native
+// versions where consumers must register BGTask handlers explicitly.
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[TSBackgroundFetch sharedInstance] didFinishLaunching];
     return YES;
@@ -58,6 +61,10 @@ static NSString *const ACTION_SCHEDULE_TASK = @"scheduleTask";
 -(instancetype) init {
     self = [super init];
     return self;
+}
+
+- (void)detachFromEngineForRegistration:(NSObject<FlutterPluginRegistrar>*)registrar {
+    [[TSBackgroundFetch sharedInstance] removeListener:PLUGIN_ID];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
