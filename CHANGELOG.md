@@ -2,6 +2,7 @@
 
 ## 1.6.1 &mdash; 2026-04-15
 * Update native libs for 4.1.0
+* [iOS] Migrate `/example` to Flutter 3.41 UIScene lifecycle (adopt `FlutterImplicitEngineDelegate`, register plugins via `didInitializeImplicitFlutterEngine:`, add `UIApplicationSceneManifest` with `FlutterSceneDelegate`).  TSBackgroundFetch 4.1's `+load` auto-registers BGTask launch handlers before the BGTaskScheduler deadline, which is required for UIScene apps where the plugin's `application:didFinishLaunchingWithOptions:` is delivered too late via Flutter's scene fallback.
 
 ## 1.6.0 &mdash; 2026-04-14
 * [Changed] Renamed `HeadlessTask` class to `HeadlessEvent` to align with TypeScript API.  A `typedef HeadlessTask = HeadlessEvent` alias is provided for backwards compatibility.
