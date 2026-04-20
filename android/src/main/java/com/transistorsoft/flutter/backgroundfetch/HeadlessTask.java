@@ -34,7 +34,6 @@ public class HeadlessTask implements MethodChannel.MethodCallHandler, Runnable {
     private static final String METHOD_CHANNEL_NAME             = BackgroundFetchModule.PLUGIN_ID + "/headless";
     private static final String ACTION_INITIALIZED              = "initialized";
     private Context mContext;
-    // Deprecated 1.12.0
     private static FlutterEngine sBackgroundFlutterEngine;
 
     private static final AtomicBoolean sHeadlessTaskRegistered = new AtomicBoolean(false);
@@ -51,6 +50,29 @@ public class HeadlessTask implements MethodChannel.MethodCallHandler, Runnable {
     static boolean register(final Context context, final List<Object> callbacks) {
         BackgroundFetch.getThreadPool().execute(new RegistrationTask(context, callbacks));
         return true;
+    }
+
+    /**
+     * Destroy the background {@link FlutterEngine} spawned for headless-task
+     * execution.  Called when the main Activity re-attaches — the headless
+     * engine's purpose is to process events while the main isolate is gone,
+     * so keeping it alive after the main engine returns is both unnecessary
+     * and a source of plugin-channel conflicts that can block the main
+     * engine's boot (manifests as a stuck splash / logo, or as
+     * MissingPluginException on the {@code /methods} channel, when an FGS
+     * kept the process alive post-termination).
+     */
+    static synchronized void destroyBackgroundIsolate() {
+        if (sBackgroundFlutterEngine != null) {
+            Log.d(BackgroundFetch.TAG, "[HeadlessTask] destroying background isolate (main engine attaching)");
+            sBackgroundFlutterEngine.destroy();
+            sBackgroundFlutterEngine = null;
+        }
+        if (sDispatchChannel != null) {
+            sDispatchChannel.setMethodCallHandler(null);
+            sDispatchChannel = null;
+        }
+        sHeadlessTaskRegistered.set(false);
     }
 
     public HeadlessTask(Context context, BGTask task) {

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.6.2 &mdash; 2026-04-20
+* [Android] Fix `MissingPluginException` on `com.transistorsoft/flutter_background_fetch/methods` after app relaunch when a foreground service kept the process alive post-termination.  `HeadlessTask` now destroys its background `FlutterEngine` when the main Activity re-attaches, and `BackgroundFetchModule` tracks method channels per-`BinaryMessenger` so destroying one engine (e.g. a sibling plugin's headless isolate) no longer strips the handler from another engine's channel.
+
 ## 1.6.1 &mdash; 2026-04-15
 * Update native libs for 4.1.0
 * [iOS] Migrate `/example` to Flutter 3.41 UIScene lifecycle (adopt `FlutterImplicitEngineDelegate`, register plugins via `didInitializeImplicitFlutterEngine:`, add `UIApplicationSceneManifest` with `FlutterSceneDelegate`).  TSBackgroundFetch 4.1's `+load` auto-registers BGTask launch handlers before the BGTaskScheduler deadline, which is required for UIScene apps where the plugin's `application:didFinishLaunchingWithOptions:` is delivered too late via Flutter's scene fallback.

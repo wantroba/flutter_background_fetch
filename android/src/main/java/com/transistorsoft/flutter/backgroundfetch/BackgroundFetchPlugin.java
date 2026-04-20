@@ -4,26 +4,31 @@ import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 
 /** BackgroundFetchPlugin */
 public class BackgroundFetchPlugin implements FlutterPlugin, ActivityAware {
     public static final String TAG                          = "TSBackgroundFetch";
 
+    private BinaryMessenger mMessenger;
+
     public BackgroundFetchPlugin() { }
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
-        BackgroundFetchModule.getInstance().onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
+        mMessenger = binding.getBinaryMessenger();
+        BackgroundFetchModule.getInstance().onAttachedToEngine(binding.getApplicationContext(), mMessenger);
     }
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        BackgroundFetchModule.getInstance().onDetachedFromEngine();
+        BackgroundFetchModule.getInstance().onDetachedFromEngine(binding.getBinaryMessenger());
+        mMessenger = null;
     }
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding activityPluginBinding) {
-        BackgroundFetchModule.getInstance().setActivity(activityPluginBinding.getActivity());
+        BackgroundFetchModule.getInstance().setActivity(activityPluginBinding.getActivity(), mMessenger);
     }
 
     @Override
@@ -41,6 +46,6 @@ public class BackgroundFetchPlugin implements FlutterPlugin, ActivityAware {
 
     @Override
     public void onDetachedFromActivity() {
-        BackgroundFetchModule.getInstance().setActivity(null);
+        BackgroundFetchModule.getInstance().setActivity(null, null);
     }
 }
