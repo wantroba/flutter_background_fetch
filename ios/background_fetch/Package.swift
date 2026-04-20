@@ -15,7 +15,7 @@ let package = Package(
         )
     ],    
     dependencies: [
-        .package(url: "https://github.com/transistorsoft/transistor-background-fetch.git", from: "4.1.0")
+        .package(url: "https://github.com/wantroba/transistor-background-fetch.git", from: "4.1.0")
     ],
     targets: [
         .target(
