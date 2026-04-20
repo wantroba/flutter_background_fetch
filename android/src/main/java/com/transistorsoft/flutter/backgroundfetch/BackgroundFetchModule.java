@@ -43,9 +43,13 @@ public class BackgroundFetchModule implements MethodCallHandler {
 
     private Context mContext;
 
-    private BinaryMessenger mMessenger;
     private final AtomicBoolean mIsAttachedToEngine = new AtomicBoolean(false);
-    private MethodChannel mMethodChannel;
+    // Keyed by BinaryMessenger so tearing down one engine (e.g. a sibling
+    // plugin's headless FlutterEngine) doesn't strip the handler from
+    // another engine's channel.  The previous single-field design was
+    // "last-attached wins" and lost the main-engine handler whenever any
+    // other engine detached.
+    private final Map<BinaryMessenger, MethodChannel> mMethodChannels = new HashMap<>();
     private EventChannel mEventChannelTask;
 
     public static BackgroundFetchModule getInstance() {
@@ -68,27 +72,39 @@ public class BackgroundFetchModule implements MethodCallHandler {
         // Poke BackgroundFetch alive once Context is received
         BackgroundFetch.getInstance(context);
         mIsAttachedToEngine.set(true);
-        mMessenger = messenger;
         mContext = context;
 
-        mMethodChannel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
-        mMethodChannel.setMethodCallHandler(this);
+        MethodChannel methodChannel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
+        methodChannel.setMethodCallHandler(this);
+        mMethodChannels.put(messenger, methodChannel);
     }
 
-    void onDetachedFromEngine() {
-        mIsAttachedToEngine.set(false);
-        if (mMethodChannel != null) {
-          mMethodChannel.setMethodCallHandler(null);  
+    void onDetachedFromEngine(BinaryMessenger messenger) {
+        MethodChannel methodChannel = mMethodChannels.remove(messenger);
+        if (methodChannel != null) {
+            methodChannel.setMethodCallHandler(null);
         }
-        mMethodChannel = null;
+        if (mMethodChannels.isEmpty()) {
+            mIsAttachedToEngine.set(false);
+        }
     }
 
-    void setActivity(Activity activity) {
+    void setActivity(@Nullable Activity activity, @Nullable BinaryMessenger messenger) {
         if (activity != null) {
+            // Tear down any lingering headless FlutterEngine spawned by
+            // HeadlessTask while the main Activity was gone.  Keeping it
+            // alive alongside the main engine risks plugin-channel conflicts
+            // that surface as MissingPluginException on the /methods channel
+            // (or a stuck splash / logo) when an FGS kept the process alive
+            // post-termination.
+            HeadlessTask.destroyBackgroundIsolate();
+
             // Inform BackgroundFetch LifecycleManager that we're not Headless (an Activity exists).
             LifecycleManager.getInstance().setHeadless(false);
-            mEventChannelTask = new EventChannel(mMessenger, EVENT_CHANNEL_NAME);
-            mEventChannelTask.setStreamHandler(mFetchCallback);
+            if (messenger != null) {
+                mEventChannelTask = new EventChannel(messenger, EVENT_CHANNEL_NAME);
+                mEventChannelTask.setStreamHandler(mFetchCallback);
+            }
         } else {
             LifecycleManager.getInstance().setHeadless(true);
             if (mEventChannelTask != null) {
